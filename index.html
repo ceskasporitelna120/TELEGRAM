@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Кошелёк — макет</title>
+<style>
+  :root{
+    --bg:#0a0a0a;
+    --card:#070707;
+    --accent:#e36b66; /* красный/коралловый как на скриншоте */
+    --muted:#8a8a8a;
+    --white:#ffffff;
+    --soft:#141414;
+    --glass: rgba(255,255,255,0.03);
+  }
+  /* Reset */
+  *{box-sizing:border-box;margin:0;padding:0;font-family: Inter, "Helvetica Neue", Arial, sans-serif}
+  html,body{height:100%}
+  body{
+    background:linear-gradient(180deg,var(--bg),#050505);
+    color:var(--white);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    padding:18px;
+  }
+
+  /* Phone status bar imitation */
+  .statusbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size:14px;
+    color:var(--white);
+    opacity:0.9;
+    margin-bottom:8px;
+  }
+  .statusbar .left{display:flex; gap:8px; align-items:center}
+  .statusbar .right{display:flex; gap:10px; align-items:center; font-size:13px; color:var(--muted)}
+
+  /* Top header */
+  .header{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 6px;
+  }
+  .back{
+    width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  }
+  .title{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-weight:600;
+    font-size:20px;
+  }
+  .verified{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(180deg,#111,#222);
+    width:18px;height:18px;border-radius:6px;color:var(--accent);font-size:12px;border:1px solid rgba(255,255,255,0.04)
+  }
+  .right-actions{margin-left:auto; display:flex; gap:10px; align-items:center}
+
+  /* Balance card */
+  .balance-card{
+    background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+    border-radius:18px;
+    padding:26px 18px;
+    margin-top:6px;
+    position:relative;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  }
+  .tabs{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    margin-bottom:10px;
+  }
+  .tab{
+    padding:8px 12px;border-radius:999px;background:transparent;border:1px solid rgba(255,255,255,0.03);font-weight:600;color:var(--muted);
+  }
+  .tab.active{background:rgba(255,255,255,0.03); color:var(--white)}
+
+  .balance-label{color:var(--muted); margin-top:6px}
+  .balance-value{font-size:64px; font-weight:700; line-height:1; margin-top:6px}
+
+  /* Actions row */
+  .actions{
+    display:flex;
+    gap:22px;
+    justify-content:space-around;
+    margin-top:18px;
+    padding-top:14px;
+    border-top:1px dashed rgba(255,255,255,0.03);
+  }
+  .action{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    align-items:center;
+    color:var(--accent);
+    font-weight:600;
+    font-size:14px;
+  }
+  .action .icon{
+    width:44px;height:44px;border-radius:10px;background:linear-gradient(180deg,#2a2a2a,#161616);
+    display:flex;align-items:center;justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.6)
+  }
+
+  /* Assets list */
+  .assets{
+    margin-top:18px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .asset{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:10px 8px;
+  }
+  .asset .left{
+    display:flex;align-items:center;gap:12px;
+  }
+  .coin{
+    width:44px;height:44px;border-radius:12px;background:var(--soft);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--white);
+  }
+  .asset .meta{display:flex;flex-direction:column}
+  .asset .meta .name{font-weight:700}
+  .asset .meta .sub{color:var(--muted); font-size:13px}
+
+  .amount{margin-left:auto; text-align:right}
+  .amount .big{font-weight:700}
+  .amount .small{color:var(--muted); font-size:13px}
+
+  /* Trending area */
+  .trending{
+    margin-top:22px;
+    color:var(--accent);
+  }
+  .trending .list{
+    display:flex;gap:18px;margin-top:12px;
+  }
+  .trend-item{
+    width:120px;background:transparent;padding:12px;border-radius:12px;
+  }
+  .trend-item .symbol{display:flex;align-items:center;gap:10px;font-weight:700;margin-bottom:8px}
+  .trend-item .price{color:var(--muted);font-size:13px;margin-top:6px}
+
+  /* Bottom nav */
+  .bottom-nav{
+    position:fixed;
+    left:0;right:0;bottom:12px;
+    display:flex;
+    justify-content:space-around;
+    padding:10px 18px;
+    max-width:540px;margin:0 auto;
+    background:rgba(10,10,10,0.7);
+    border-radius:18px;
+    box-shadow:0 8px 40px rgba(0,0,0,0.6);
+    border:1px solid rgba(255,255,255,0.03)
+  }
+  .nav-item{display:flex;flex-direction:column;align-items:center;color:var(--muted);font-size:12px;gap:6px}
+  .nav-item.active{color:var(--white)}
+  .nav-item .nav-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(180deg,#121212,#0b0b0b);display:flex;align-items:center;justify-content:center}
+
+  /* Avatar */
+  .avatar{
+    width:40px;height:40px;border-radius:50%;overflow:hidden;border:2px solid rgba(255,255,255,0.04);
+  }
+  .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+
+  /* Small responsive tweaks */
+  @media (max-width:420px){
+    .balance-value{font-size:48px}
+    .trend-item{width:90px}
+  }
+</style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="avatar" title="avatar">
+      <!-- Замените avatar.png на вашу аватарку (оставляем как есть) -->
+      <img src="avatar.png" alt="avatar">
+    </div>
+
+    <div class="title">Кошелёк <span class="verified">✔</span></div>
+
+    <div class="right-actions">
+      <!-- toggle type pill imitation -->
+      <div style="display:flex;gap:8px;background:rgba(255,255,255,0.02);padding:6px;border-radius:999px;border:1px solid rgba(255,255,255,0.02)">
+        <div style="padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.03);font-weight:700">Крипто</div>
+        <div style="padding:6px 10px;border-radius:999px;color:var(--muted)">TON</div>
+      </div>
+      <!-- scan icon -->
+      <div style="width:40px;height:40px;border-radius:10px;display:grid;place-items:center;background:transparent;border:1px solid rgba(255,255,255,0.03)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="6" height="2" fill="currentColor"/><rect x="14" y="18" width="6" height="2" fill="currentColor"/><rect x="4" y="12" width="6" height="2" fill="currentColor"/><rect x="14" y="6" width="6" height="2" fill="currentColor"/></svg>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="balance-card" role="region" aria-label="Баланс">
+      <div class="tabs">
+        <div class="tab active">Крипто</div>
+        <div class="tab">TON</div>
+      </div>
+
+      <div class="balance-label">Баланс</div>
+      <div class="balance-value">1890,81 <span style="font-size:26px;color:var(--muted);">$</span></div>
+
+      <div class="actions" aria-hidden="false">
+        <div class="action">
+          <div class="icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5v14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 11l6-6 6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div>Отправить</div>
+        </div>
+
+        <div class="action">
+          <div class="icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 8v8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+          <div>Пополнить</div>
+        </div>
+
+        <div class="action">
+          <div class="icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 12h-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M3 12h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M14 5l7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div>Обменять</div>
+        </div>
+
+        <div class="action">
+          <div class="icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 10h.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+          <div>P2P Market</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="assets" aria-label="Активы">
+      <div class="asset">
+        <div class="left">
+          <div class="coin" style="background:#1d8f5a"> $ </div>
+          <div class="meta">
+            <div class="name">Доллары</div>
+            <div class="sub">0,05 USDT</div>
+          </div>
+        </div>
+        <div class="amount">
+          <div class="big">0,05 $</div>
+          <div class="small">0,05 USDT</div>
+        </div>
+      </div>
+
+      <div class="asset">
+        <div class="left">
+          <div class="coin" style="background:linear-gradient(180deg,#2a6df4,#1b4fd0)"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3v18" stroke="white" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+          <div class="meta">
+            <div class="name">Toncoin</div>
+            <div class="sub" style="color:#ff6b6b">2,82 $ ↓ 8,13%</div>
+          </div>
+        </div>
+        <div class="amount">
+          <div class="big">0,16 $</div>
+          <div class="small">0,057 TON</div>
+        </div>
+      </div>
+
+      <div style="padding:12px 8px;color:var(--muted);font-weight:700;border-top:1px dashed rgba(255,255,255,0.02)">Другие активы ▾</div>
+
+    </section>
+
+    <section class="trending" aria-label="В тренде">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="color:var(--muted);font-weight:700">В тренде</div>
+        <div style="color:var(--accent);font-weight:700">Все</div>
+      </div>
+
+      <div class="list">
+        <div class="trend-item">
+          <div class="symbol"><div style="width:36px;height:36;border-radius:10px;background:#f2a93b;display:flex;align-items:center;justify-content:center;font-weight:800">฿</div><div>BTC <span style="color:var(--accent);font-size:12px;margin-left:6px">↓ 2,56%</span></div></div>
+          <div class="price">112 789,09 $</div>
+        </div>
+
+        <div class="trend-item">
+          <div class="symbol"><div style="width:36px;height:36;border-radius:10px;background:#6d4bba;display:flex;align-items:center;justify-content:center;font-weight:800">π</div><div>PI <span style="color:var(--accent);font-size:12px;margin-left:6px">↓ 17,80%</span></div></div>
+          <div class="price">0,292 $</div>
+        </div>
+
+        <div class="trend-item">
+          <div class="symbol"><div style="width:36px;height:36;border-radius:10px;background:#4d9bd6;display:flex;align-items:center;justify-content:center;font-weight:800">…</div><div>Еще</div></div>
+          <div class="price" style="color:var(--muted)">—</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- bottom nav -->
+  <nav class="bottom-nav" role="navigation" aria-label="Основная навигация">
+    <div class="nav-item active">
+      <div class="nav-icon">💼</div>
+      <div>Кошелёк</div>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">📈</div>
+      <div>Обмен</div>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">⏱</div>
+      <div>История</div>
+    </div>
+  </nav>
+
+</body>
+</html>
